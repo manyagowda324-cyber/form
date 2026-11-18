@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CC Poster Topic Registration</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      -webkit-font-smoothing: antialiased;
+    }
+    .card-shadow {
+      box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+    }
+    .btn-primary {
+      background-color: #283870;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background-color: #1e2b58;
+    }
+    .btn-primary:active:not(:disabled) {
+      transform: scale(0.995);
+    }
+    .btn-primary:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body class="min-h-screen py-5 px-3 sm:px-6">
+
+  <!-- Main Centered Container -->
+  <main class="max-w-[680px] mx-auto space-y-4">
+
+    <!-- 1. Header Card -->
+    <section class="bg-white rounded-xl p-5 sm:p-6 card-shadow border border-slate-200/70">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        <div>
+          <h1 class="text-xl sm:text-[22px] font-bold text-slate-900 tracking-tight">
+            CC Poster Topic Registration
+          </h1>
+          <p class="text-[13px] sm:text-sm text-slate-500 mt-1.5 leading-relaxed">
+            Check the registered topics before selecting your poster topic. Each topic can be selected by only one student.
+          </p>
+        </div>
+        <!-- Share Link Quick Action -->
+        <button
+          id="copyLinkBtn"
+          type="button"
+          title="Copy link to share with classmates"
+          class="self-start shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200/80 transition-colors"
+        >
+          <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+          </svg>
+          <span id="copyLinkText">Share Link</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 2. Registration Form Card -->
+    <section class="bg-white rounded-xl p-5 sm:p-6 card-shadow border border-slate-200/70">
+      <h2 class="text-base sm:text-[17px] font-bold text-slate-900 mb-4">
+        Register Your Topic
+      </h2>
+
+      <!-- Inline Feedback Banner (Errors / Success) -->
+      <div id="statusBanner" class="hidden mb-4 rounded-lg px-3.5 py-2.5 text-xs sm:text-sm font-medium border"></div>
+
+      <form id="registrationForm" class="space-y-4" novalidate>
+        <!-- Student Name -->
+        <div>
+          <label for="studentName" class="block text-xs sm:text-[13px] font-semibold text-slate-700 mb-1.5">
+            Student Name
+          </label>
+          <input
+            type="text"
+            id="studentName"
+            name="studentName"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            required
+            class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#283870]/25 focus:border-[#283870] transition"
+          />
+        </div>
+
+        <!-- USN -->
+        <div>
+          <label for="usn" class="block text-xs sm:text-[13px] font-semibold text-slate-700 mb-1.5">
+            USN
+          </label>
+          <input
+            type="text"
+            id="usn"
+            name="usn"
+            placeholder="Enter your USN"
+            autocomplete="off"
+            required
+            class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 uppercase focus:outline-none focus:ring-2 focus:ring-[#283870]/25 focus:border-[#283870] transition"
+          />
+        </div>
+
+        <!-- Poster Topic -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label for="posterTopic" class="block text-xs sm:text-[13px] font-semibold text-slate-700">
+              Poster Topic
+            </label>
+            <span id="liveAvailabilityHint" class="text-[11px] font-medium"></span>
+          </div>
+          <input
+            type="text"
+            id="posterTopic"
+            name="posterTopic"
+            placeholder="Enter your chosen poster topic"
+            autocomplete="off"
+            required
+            class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#283870]/25 focus:border-[#283870] transition"
+          />
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-1">
+          <button
+            type="submit"
+            id="submitBtn"
+            class="btn-primary w-full rounded-lg py-2.5 px-4 text-sm font-semibold text-white shadow-sm flex items-center justify-center gap-2"
+          >
+            <span id="submitBtnText">Submit Topic</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 3. Already Selected Topics Card -->
+    <section class="bg-white rounded-xl p-5 sm:p-6 card-shadow border border-slate-200/70">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+        <div>
+          <h2 class="text-base sm:text-[17px] font-bold text-slate-900">
+            Already Selected Topics
+          </h2>
+          <p class="text-xs sm:text-[13px] text-slate-500 mt-1">
+            These topics are already registered. Please choose a different one.
+          </p>
+        </div>
+
+        <!-- Export CSV Button for Coordinator -->
+        <button
+          id="exportCsvBtn"
+          type="button"
+          class="self-start shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors"
+          title="Download all registered topics as CSV"
+        >
+          <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Export CSV
+        </button>
+      </div>
+
+      <!-- Count Pill Badge & Quick Search -->
+      <div class="mt-3.5 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <div class="flex items-center gap-2">
+          <span
+            id="topicCountBadge"
+            class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#e0e7ff] text-[#283870]"
+          >
+            0 topics registered
+          </span>
+          <span id="liveSyncIndicator" class="inline-flex items-center gap-1 text-[11px] text-slate-400">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            Live
+          </span>
+        </div>
+
+        <!-- Quick Search / Filter Input -->
+        <div class="relative w-full sm:w-56">
+          <input
+            type="text"
+            id="searchTopicsInput"
+            placeholder="Search topic, name, USN..."
+            class="w-full rounded-lg border border-slate-200 pl-8 pr-3 py-1.5 text-xs text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#283870]/20 focus:border-[#283870]"
+          />
+          <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loadingListState" class="py-8 text-center text-xs sm:text-sm text-slate-400">
+        Loading registered topics...
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyListState" class="hidden py-8 text-center border-t border-slate-100">
+        <p class="text-sm font-medium text-slate-500">No topics registered yet.</p>
+        <p class="text-xs text-slate-400 mt-1">Be the first student to submit your poster topic above!</p>
+      </div>
+
+      <!-- Registered Topics List -->
+      <ol id="topicsList" class="divide-y divide-slate-100 border-t border-slate-100 hidden"></ol>
+    </section>
+
+  </main>
+
+  <!-- Firebase Integration (Real-time Shared Persistence) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import {
+      getAuth,
+      signInAnonymously,
+      signInWithCustomToken,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Environment & Firebase Configuration
+    const appId = typeof __app_id !== "undefined" ? __app_id : "cc-poster-topic-registration";
+    const firebaseConfig = typeof __firebase_config !== "undefined" ? JSON.parse(__firebase_config) : null;
+
+    // UI References
+    const form = document.getElementById("registrationForm");
+    const studentNameInput = document.getElementById("studentName");
+    const usnInput = document.getElementById("usn");
+    const posterTopicInput = document.getElementById("posterTopic");
+    const submitBtn = document.getElementById("submitBtn");
+    const submitBtnText = document.getElementById("submitBtnText");
+    const statusBanner = document.getElementById("statusBanner");
+    const liveAvailabilityHint = document.getElementById("liveAvailabilityHint");
+    const topicCountBadge = document.getElementById("topicCountBadge");
+    const topicsList = document.getElementById("topicsList");
+    const loadingListState = document.getElementById("loadingListState");
+    const emptyListState = document.getElementById("emptyListState");
+    const searchTopicsInput = document.getElementById("searchTopicsInput");
+    const exportCsvBtn = document.getElementById("exportCsvBtn");
+    const copyLinkBtn = document.getElementById("copyLinkBtn");
+    const copyLinkText = document.getElementById("copyLinkText");
+
+    // In-memory cache synced in real time
+    let allRegistrations = [];
+    let currentUser = null;
+    let db = null;
+    let auth = null;
+    let registrationsCollection = null;
+
+    // Normalize helper for duplicate checks (case-insensitive & collapsed whitespace)
+    function normalizeString(str) {
+      return str.trim().replace(/\s+/g, " ").toLowerCase();
+    }
+
+    // Show inline status banner (error or success)
+    function showBanner(message, type = "error") {
+      statusBanner.textContent = message;
+      statusBanner.classList.remove(
+        "hidden",
+        "bg-red-50", "text-red-700", "border-red-200",
+        "bg-emerald-50", "text-emerald-700", "border-emerald-200"
+      );
+
+      if (type === "success") {
+        statusBanner.classList.add("bg-emerald-50", "text-emerald-700", "border-emerald-200");
+      } else {
+        statusBanner.classList.add("bg-red-50", "text-red-700", "border-red-200");
+      }
+    }
+
+    function hideBanner() {
+      statusBanner.classList.add("hidden");
+    }
+
+    // Render list of registered topics
+    function renderTopicsList() {
+      const searchTerm = normalizeString(searchTopicsInput.value || "");
+
+      // Update total registered badge
+      const total = allRegistrations.length;
+      topicCountBadge.textContent = `${total} ${total === 1 ? "topic" : "topics"} registered`;
+
+      loadingListState.classList.add("hidden");
+
+      if (total === 0) {
+        topicsList.classList.add("hidden");
+        emptyListState.classList.remove("hidden");
+        emptyListState.innerHTML = `
+          <p class="text-sm font-medium text-slate-500">No topics registered yet.</p>
+          <p class="text-xs text-slate-400 mt-1">Be the first student to submit your poster topic above!</p>
+        `;
+        return;
+      }
+
+      // Filter by search term while preserving original registration number
+      const indexedList = allRegistrations.map((item, idx) => ({
+        ...item,
+        displayIndex: idx + 1
+      }));
+
+      const filtered = searchTerm
+        ? indexedList.filter(
+            (item) =>
+              normalizeString(item.topic).includes(searchTerm) ||
+              normalizeString(item.studentName).includes(searchTerm) ||
+              normalizeString(item.usn).includes(searchTerm)
+          )
+        : indexedList;
+
+      if (filtered.length === 0) {
+        topicsList.classList.add("hidden");
+        emptyListState.classList.remove("hidden");
+        emptyListState.innerHTML = `
+          <p class="text-sm font-medium text-slate-500">No matching topics found.</p>
+          <p class="text-xs text-slate-400 mt-1">Good news! Your search term does not match any taken topic.</p>
+        `;
+        return;
+      }
+
+      emptyListState.classList.add("hidden");
+      topicsList.classList.remove("hidden");
+
+      topicsList.innerHTML = filtered
+        .map((item) => {
+          const safeTopic = escapeHtml(item.topic);
+          const safeName = escapeHtml(item.studentName);
+          const safeUsn = escapeHtml(item.usn);
+          return `
+            <li class="py-3.5 first:pt-3 last:pb-1">
+              <div class="text-[13.5px] sm:text-sm font-bold text-slate-900 leading-snug">
+                ${item.displayIndex}. ${safeTopic}
+              </div>
+              <div class="text-xs text-slate-500 mt-1">
+                Selected by: <span class="font-medium text-slate-600">${safeName}</span>
+                <span class="text-slate-400 ml-1">(${safeUsn})</span>
+              </div>
+            </li>
+          `;
+        })
+        .join("");
+    }
+
+    // Prevent XSS when rendering user inputs
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Live availability indicator while typing Poster Topic
+    posterTopicInput.addEventListener("input", () => {
+      const val = normalizeString(posterTopicInput.value);
+      if (!val) {
+        liveAvailabilityHint.textContent = "";
+        return;
+      }
+
+      const existing = allRegistrations.find(
+        (item) => normalizeString(item.topic) === val
+      );
+
+      if (existing) {
+        liveAvailabilityHint.textContent = `Already taken by ${existing.studentName}`;
+        liveAvailabilityHint.className = "text-[11px] font-semibold text-red-600";
+      } else {
+        liveAvailabilityHint.textContent = "Available";
+        liveAvailabilityHint.className = "text-[11px] font-semibold text-emerald-600";
+      }
+    });
+
+    // Live search filter
+    searchTopicsInput.addEventListener("input", renderTopicsList);
+
+    // Copy Share Link button
+    copyLinkBtn.addEventListener("click", () => {
+      const urlToCopy = window.location.href;
+      const tempInput = document.createElement("textarea");
+      tempInput.value = urlToCopy;
+      tempInput.style.position = "fixed";
+      tempInput.style.opacity = "0";
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand("copy");
+        copyLinkText.textContent = "Link Copied!";
+        copyLinkBtn.classList.add("bg-emerald-50", "text-emerald-700");
+        setTimeout(() => {
+          copyLinkText.textContent = "Share Link";
+          copyLinkBtn.classList.remove("bg-emerald-50", "text-emerald-700");
+        }, 2200);
+      } catch (err) {
+        showBanner("Unable to copy link automatically. Please copy the URL from your browser address bar.", "error");
+      } finally {
+        document.body.removeChild(tempInput);
+      }
+    });
+
+    // Export CSV button
+    exportCsvBtn.addEventListener("click", () => {
+      if (allRegistrations.length === 0) {
+        showBanner("No topics registered yet to export.", "error");
+        return;
+      }
+      const headers = ["Sl. No.", "Student Name", "USN", "Poster Topic", "Registered At"];
+      const rows = allRegistrations.map((item, idx) => [
+        idx + 1,
+        `"${(item.studentName || "").replace(/"/g, '""')}"`,
+        `"${(item.usn || "").replace(/"/g, '""')}"`,
+        `"${(item.topic || "").replace(/"/g, '""')}"`,
+        `"${item.createdAt ? new Date(item.createdAt).toLocaleString() : ""}"`
+      ]);
+
+      const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `CC_Poster_Registered_Topics_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    });
+
+    // Handle Form Submission
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideBanner();
+
+      const studentName = studentNameInput.value.trim().replace(/\s+/g, " ");
+      const usn = usnInput.value.trim().toUpperCase().replace(/\s+/g, "");
+      const topic = posterTopicInput.value.trim().replace(/\s+/g, " ");
+
+      // 1. Validate required fields
+      if (!studentName || !usn || !topic) {
+        showBanner("Please fill in your Student Name, USN, and Poster Topic.", "error");
+        return;
+      }
+
+      // 2. Check duplicate USN
+      const duplicateUsn = allRegistrations.find(
+        (item) => normalizeString(item.usn) === normalizeString(usn)
+      );
+      if (duplicateUsn) {
+        showBanner(
+          `USN "${usn}" has already registered the topic "${duplicateUsn.topic}". Only one topic is allowed per student.`,
+          "error"
+        );
+        return;
+      }
+
+      // 3. Check duplicate Poster Topic (case-insensitive)
+      const duplicateTopic = allRegistrations.find(
+        (item) => normalizeString(item.topic) === normalizeString(topic)
+      );
+      if (duplicateTopic) {
+        showBanner(
+          `The poster topic "${duplicateTopic.topic}" is already selected by ${duplicateTopic.studentName} (${duplicateTopic.usn}). Please choose a different topic.`,
+          "error"
+        );
+        return;
+      }
+
+      // Set loading state
+      submitBtn.disabled = true;
+      submitBtnText.textContent = "Submitting...";
+
+      try {
+        const newEntry = {
+          studentName,
+          usn,
+          topic,
+          normalizedTopic: normalizeString(topic),
+          normalizedUsn: normalizeString(usn),
+          createdAt: Date.now(),
+          submittedByUid: currentUser ? currentUser.uid : "anonymous"
+        };
+
+        if (registrationsCollection && currentUser) {
+          await addDoc(registrationsCollection, newEntry);
+        } else {
+          // Fallback if Firebase config isn't injected in standalone preview
+          allRegistrations.push({ id: crypto.randomUUID(), ...newEntry });
+          renderTopicsList();
+        }
+
+        // Reset form & show confirmation
+        form.reset();
+        liveAvailabilityHint.textContent = "";
+        showBanner(`Success! "${topic}" has been registered under ${studentName} (${usn}).`, "success");
+      } catch (err) {
+        console.error("Error submitting topic:", err);
+        showBanner("Failed to save your topic. Please check your internet connection and try again.", "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtnText.textContent = "Submit Topic";
+      }
+    });
+
+    // Initialize Firebase Auth & Real-Time Firestore Listener
+    async function initFirebase() {
+      if (!firebaseConfig) {
+        loadingListState.classList.add("hidden");
+        renderTopicsList();
+        return;
+      }
+
+      try {
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        // Rule 3: Sign in FIRST before any Firestore listener or operation
+        if (typeof __initial_auth_token !== "undefined" && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+
+        currentUser = auth.currentUser;
+
+        onAuthStateChanged(auth, (user) => {
+          currentUser = user;
+        });
+
+        if (!currentUser) return;
+
+        // Rule 1: Strict public shared collection path so all students with the link share the same live list
+        registrationsCollection = collection(
+          db,
+          "artifacts",
+          appId,
+          "public",
+          "data",
+          "cc_poster_registrations"
+        );
+
+        // Rule 2: Simple collection query, sorted in JavaScript memory by createdAt ascending (1, 2, 3...)
+        onSnapshot(
+          registrationsCollection,
+          (snapshot) => {
+            const items = [];
+            snapshot.forEach((docSnap) => {
+              items.push({
+                id: docSnap.id,
+                ...docSnap.data()
+              });
+            });
+
+            // Sort chronologically so numbering (1, 2, 3...) stays consistent for everyone
+            items.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+            allRegistrations = items;
+            renderTopicsList();
+
+            // Re-evaluate live availability hint if user is currently typing
+            if (posterTopicInput.value.trim()) {
+              posterTopicInput.dispatchEvent(new Event("input"));
+            }
+          },
+          (error) => {
+            console.error("Firestore listener error:", error);
+            loadingListState.textContent = "Unable to sync live topics. Please refresh the page.";
+          }
+        );
+      } catch (err) {
+        console.error("Firebase initialization failed:", err);
+        loadingListState.classList.add("hidden");
+        renderTopicsList();
+      }
+    }
+
+    initFirebase();
+  </script>
+</body>
+</html>
